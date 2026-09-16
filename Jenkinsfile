@@ -15,7 +15,7 @@ pipeline {
     TARGET_ENV     = "${params.TARGET_ENV}"
     IMAGE_NAME     = 'product-service'
     IMAGE_TAG      = "${env.BUILD_NUMBER}"
-    MANIFESTS_REPO = 'github.com/<내계정>/product-service-manifests.git'
+    MANIFESTS_REPO = 'github.com/joneconsulting/product-service-manifests.git'
   }
 
   stages {
@@ -103,14 +103,14 @@ pipeline {
     // }
   }
 
-  // post {
-  //   success {
-  //     slackSend(channel: '#deploy', color: 'good',
-  //       message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
-  //   }
-  //   failure {
-  //     slackSend(channel: '#deploy', color: 'danger',
-  //       message: "❌ ${params.TARGET_ENV} 배포 파이프라인 실패 — 빌드 번호 ${env.BUILD_NUMBER}")
-  //   }
-  // }
+  post {
+    success {
+      slackSend(channel: '#deploy', color: 'good',
+        message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+    }
+    failure {
+      slackSend(channel: '#deploy', color: 'danger',
+        message: "❌ ${params.TARGET_ENV} 배포 파이프라인 실패 — 빌드 번호 ${env.BUILD_NUMBER}")
+    }
+  }
 }

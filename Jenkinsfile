@@ -80,7 +80,7 @@ pipeline {
     }
 
     // Section 6: production은 클러스터를 직접 건드리지 않고, 매니페스트 저장소에
-    이미지 태그를 갱신하는 커밋만 남깁니다. 실제 배포는 ArgoCD가 담당합니다 (Pull).
+    // 이미지 태그를 갱신하는 커밋만 남깁니다. 실제 배포는 ArgoCD가 담당합니다 (Pull).
     stage('Update GitOps Repo (production - Pull)') {
       when {
         expression { params.TARGET_ENV == 'production' }

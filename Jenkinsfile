@@ -100,6 +100,21 @@ pipeline {
           '''
         }
       }
+      // Section 6: production 매니페스트 커밋 성공/실패 시 슬랙 알림을 보냅니다.
+      post {
+        success {
+          slackSend(channel: '#deploy', color: 'good',
+            message: "🚀 production 매니페스트 커밋 완료\n" +
+                    "이미지: ${env.IMAGE_NAME}:${env.IMAGE_TAG}\n" +
+                    "커밋: ${env.GITOPS_COMMIT}\n" +
+                    "ArgoCD 동기화 대기 중 — <${env.BUILD_URL}|빌드 로그>")
+        }
+        failure {
+          slackSend(channel: '#deploy', color: 'danger',
+            message: "❌ production 매니페스트 커밋 실패 — 빌드 #${env.BUILD_NUMBER}\n" +
+                    "<${env.BUILD_URL}console|콘솔 확인>")
+        }
+      }
     }
   }
 
@@ -107,6 +122,13 @@ pipeline {
     success {
       slackSend(channel: '#deploy', color: 'good',
         message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+
+      // script {
+      //   if (params.TARGET_ENV != 'production') {
+      //     slackSend(channel: '#deploy', color: 'good',
+      //       message: "✅ ${params.TARGET_ENV} 배포 완료 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+      //   }
+      // }
     }
     failure {
       slackSend(channel: '#deploy', color: 'danger',

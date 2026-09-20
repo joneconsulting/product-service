@@ -100,13 +100,13 @@ pipeline {
           '''
           script {
             env.GITOPS_COMMIT = sh(
-              script: 'cd gitops && git rev-parse --short HEAD',
+              script: 'cd gitops && git rev-parse HEAD', 
               returnStdout: true
             ).trim()
           }
         }
       }
-      // Section 6: production 매니페스트 커밋 성공/실패 시 슬랙 알림을 보냅니다.
+      // Section 6: production 배포 시, ArgoCD가 매니페스트를 Pull하여 배포 완료까지 기다립니다.
       post {
         success {
           slackSend(channel: '#deploy', color: 'good',
@@ -126,14 +126,11 @@ pipeline {
 
   post {
     success {
-      // slackSend(channel: '#deploy', color: 'good',
-      //   message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
-
       script {
         if (params.TARGET_ENV != 'production') {
           slackSend(channel: '#deploy', color: 'good',
-            message: "✅ ${params.TARGET_ENV} 배포 완료 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
-        }
+            message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+        } 
       }
     }
     failure {

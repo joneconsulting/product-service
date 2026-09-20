@@ -98,6 +98,12 @@ pipeline {
             git commit -am "deploy: $IMAGE_NAME:$IMAGE_TAG"
             git push origin main
           '''
+          script {
+            env.GITOPS_COMMIT = sh(
+              script: 'cd gitops && git rev-parse --short HEAD',
+              returnStdout: true
+            ).trim()
+          }
         }
       }
       // Section 6: production 매니페스트 커밋 성공/실패 시 슬랙 알림을 보냅니다.

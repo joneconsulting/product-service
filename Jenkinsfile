@@ -120,15 +120,15 @@ pipeline {
 
   post {
     success {
-      slackSend(channel: '#deploy', color: 'good',
-        message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+      // slackSend(channel: '#deploy', color: 'good',
+      //   message: "✅ ${params.TARGET_ENV} 배포 파이프라인 성공 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
 
-      // script {
-      //   if (params.TARGET_ENV != 'production') {
-      //     slackSend(channel: '#deploy', color: 'good',
-      //       message: "✅ ${params.TARGET_ENV} 배포 완료 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
-      //   }
-      // }
+      script {
+        if (params.TARGET_ENV != 'production') {
+          slackSend(channel: '#deploy', color: 'good',
+            message: "✅ ${params.TARGET_ENV} 배포 완료 — ${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+        }
+      }
     }
     failure {
       slackSend(channel: '#deploy', color: 'danger',
